@@ -68,13 +68,15 @@ function App(): JSX.Element {
   const [text, setText] = useState<any>("");
   let imgURI =  "";
   
-  useEffect(() => {
-    launchImageLibrary({}, setImage)
+  // useEffect(() => {
+  //   launchImageLibrary({
+  //     mediaType: 'mixed'
+  //   }, setImage)
   
-    return () => {
+  //   return () => {
       
-    }
-  }, [])
+  //   }
+  // }, [])
 
   useEffect(() => {
     if (image){
@@ -93,7 +95,33 @@ function App(): JSX.Element {
     }
   }, [image])
   
-  
+  const imageHandler = async ()=>{
+try {
+  launchImageLibrary({
+    mediaType: 'photo'
+  },  
+  (res)=>{
+    if (!res || res.didCancel == true){
+      console.log(res);
+    }
+    else setImage(res);  
+  })  
+} catch (error) {
+  console.log(error)
+}
+
+
+    // if (image){
+    //   console.log(image.assets[0].uri);
+    //   // imgURI = image[0].uri;
+
+    //   (async ()=>{
+    //     const result: any = await TextRecognition.recognize(image.assets[0].uri);
+    //     setText(result);
+    //   })();
+    // }
+  }
+
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -114,14 +142,14 @@ function App(): JSX.Element {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           
-        <Button title='Click me' onPress={()=>console.log('pressed 1')}/>
+        <Button title='Click me' onPress={()=>imageHandler()}/>
         
         <Image
         style={styles.logo}
         source={{uri: image ? image.assets[0].uri : "" }}
       />
 
-      <Text>{text}</Text>
+      <Text>{text ? text: ""}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
